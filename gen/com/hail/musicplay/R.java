@@ -14,22 +14,20 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int audio_btn_pause=0x7f060002;
-        public static final int audio_btn_play=0x7f060001;
-        public static final int audio_btn_stop=0x7f060003;
-        public static final int audio_btn_volume_mute=0x7f060004;
-        public static final int file_path=0x7f060000;
+        public static final int audio_btn_next=0x7f060003;
+        public static final int audio_btn_play=0x7f060002;
+        public static final int audio_btn_prev=0x7f060001;
+        public static final int main_list=0x7f060000;
     }
     public static final class layout {
         public static final int main_layout=0x7f030000;
     }
     public static final class string {
         public static final int app_name=0x7f040000;
-        public static final int audio_pause=0x7f040003;
-        public static final int audio_play=0x7f040002;
-        public static final int audio_stop=0x7f040004;
-        public static final int file_path_tip=0x7f040001;
-        public static final int volume_mute=0x7f040005;
+        public static final int audio_next=0x7f040004;
+        public static final int audio_pause=0x7f040002;
+        public static final int audio_play=0x7f040001;
+        public static final int audio_prev=0x7f040003;
     }
     public static final class style {
         /** 
