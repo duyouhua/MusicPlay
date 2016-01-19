@@ -1,0 +1,10 @@
+<resources>
+
+    <string name="app_name">MusicPlay</string>
+    <string name="file_path_tip">请输入文件路径</string>
+    <string name="audio_play">播放</string>
+    <string name="audio_pause">暂停</string>
+    <string name="audio_stop">停止</string>
+    <string name="volume_mute">静音</string>
+
+</resources>
