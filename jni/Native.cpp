@@ -34,9 +34,9 @@ bool Java_com_hail_musicplay_jni_MusicPlay_openFile(JNIEnv* env, jobject obj,
 		jstring path)
 {
 	JNIUtil util;
-	char* chPath = util.Jstring2String(path);
+	string strPath = util.Jstring2String(path);
 	if (g_player != NULL)
-		g_player->Open(chPath);
+		g_player->Open(strPath.c_str());
 	return true;
 }
 void Java_com_hail_musicplay_jni_MusicPlay_play(JNIEnv* env, jobject obj)

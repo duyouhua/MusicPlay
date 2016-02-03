@@ -42,7 +42,7 @@ void JNIUtil::Detach()
 	}
 }
 
-char* JNIUtil::Jstring2String(jstring jstr)
+string JNIUtil::Jstring2String(jstring jstr)
 {
 	JNIEnv *env = NULL;
 	env = GetJNIEnv();
@@ -56,12 +56,14 @@ char* JNIUtil::Jstring2String(jstring jstr)
 	jbyte* ba = env->GetByteArrayElements(barr, JNI_FALSE);
 	if (alen > 0)
 	{
-		rtn = (char*) malloc(alen + 1);
+		rtn = new char[alen+1];
 		memcpy(rtn, ba, alen);
 		rtn[alen] = 0;
 	}
 	env->ReleaseByteArrayElements(barr, ba, 0);
-	return rtn;
+	string strRet(rtn);
+	delete[] rtn;
+	return strRet;
 }
 
 //char* to jstring

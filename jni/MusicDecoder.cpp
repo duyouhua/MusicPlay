@@ -109,6 +109,7 @@ void MusicDecoder::Decode()
 			NULL);
 	swr_init(au_convert_ctx);
 	AVPacket *packet = (AVPacket *) av_malloc(sizeof(AVPacket));
+	av_init_packet(packet);
 	AVFrame *pAudioFrame = av_frame_alloc();
 	uint8_t* Audiobuffer = (uint8_t *) av_malloc(MAX_AUDIO_FRAME_SIZE * 2);
 	bool bFinish = true;
@@ -122,6 +123,7 @@ void MusicDecoder::Decode()
 				break;
 			}
 			int nAudioFinished = 0;
+
 			int nRet = avcodec_decode_audio4(m_pAudioCodecCtx, pAudioFrame,
 					&nAudioFinished, packet);
 			if (nRet > 0 && nAudioFinished != 0)
@@ -143,11 +145,10 @@ void MusicDecoder::Decode()
 				pthread_mutex_unlock(&mutexVideo);
 				sem_post(&semVideoFull);
 			}
+			av_free_packet(packet);
 		}
 	}
-	av_free(Audiobuffer);
-	av_frame_free(&pAudioFrame);
-	av_free(packet);
+	swr_free(&au_convert_ctx);
 	if (bFinish)
 	{
 		sem_wait(&semVideoEmpty);
@@ -193,8 +194,8 @@ void MusicDecoder::Close()
 	pthread_mutex_destroy(&mutexVideo);
 	if (m_pFormatCtx != NULL)
 	{
+		avcodec_close(m_pAudioCodecCtx);
 		avformat_close_input(&m_pFormatCtx);
-		avformat_free_context(m_pFormatCtx);
 		m_pFormatCtx = NULL;
 
 		m_pAudioCodec = NULL;

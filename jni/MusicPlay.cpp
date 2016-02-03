@@ -186,6 +186,10 @@ void MusicPlay::DestroyBufferQueueAudioPlayer()
 bool MusicPlay::Open(const char* path)
 {
 	LOGI("MusicPlay::Open  path = %s", path);
+	if (m_decoder != NULL)
+	{
+		Stop();
+	}
 	m_decoder = new MusicDecoder();
 	m_decoder->Open(path);
 	return true;
