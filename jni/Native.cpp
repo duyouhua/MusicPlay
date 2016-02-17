@@ -23,9 +23,7 @@ void Java_com_hail_musicplay_jni_MusicPlay_destroy(JNIEnv* env, jobject obj);
 static MusicPlay* g_player = NULL;
 bool Java_com_hail_musicplay_jni_MusicPlay_init(JNIEnv* env, jobject obj)
 {
-	JavaVM* vm;
-	env->GetJavaVM(&vm);
-	JNIUtil::SetJavaVm(vm);
+	JNIUtil::Init(env);
 	MusicPlay::Init();
 	g_player = MusicPlay::GetObject();
 	return true;
@@ -63,6 +61,7 @@ void Java_com_hail_musicplay_jni_MusicPlay_setMute(JNIEnv* env, jobject obj,
 void Java_com_hail_musicplay_jni_MusicPlay_destroy(JNIEnv* env, jobject obj)
 {
 	MusicPlay::Destory();
+	JNIUtil::CleanUp(env);
 }
 
 }

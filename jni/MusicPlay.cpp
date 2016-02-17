@@ -302,8 +302,11 @@ void MusicPlay::PlayBuff(void *pBuffer, int size)
 }
 void MusicPlay::Close()
 {
-	m_decoder->Close();
-	delete m_decoder;
-	m_decoder = NULL;
+	if (m_decoder != NULL)
+	{
+		m_decoder->Close();
+		delete m_decoder;
+		m_decoder = NULL;
+	}
 	LOGI("MusicPlay::Close()");
 }

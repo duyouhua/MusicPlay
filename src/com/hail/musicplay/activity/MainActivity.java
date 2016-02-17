@@ -26,7 +26,9 @@ public class MainActivity extends Activity implements OnClickListener {
 	private SongAdapter mAdapter;
 	private ArrayList<SongInfo> mSongInfos = new ArrayList<SongInfo>();
 	private MusicPlay mPlay = new MusicPlay();
-
+	private int mIndex = 0;
+	private boolean mPlaying=false;
+	private Button mPlayBtn;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -35,7 +37,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		mPlay.init();
 		initData();
 		initView();
-		
+
 	}
 
 	@Override
@@ -47,11 +49,11 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	private void initView() {
 		Button prevBtn = (Button) findViewById(R.id.audio_btn_prev);
-		Button playBtn = (Button) findViewById(R.id.audio_btn_play);
+		mPlayBtn = (Button) findViewById(R.id.audio_btn_play);
 		Button nextBtn = (Button) findViewById(R.id.audio_btn_next);
 		prevBtn.setOnClickListener(this);
-		playBtn.setOnClickListener(this);
-		playBtn.setTag("play");
+		mPlayBtn.setOnClickListener(this);
+		mPlayBtn.setTag("play");
 		nextBtn.setOnClickListener(this);
 		mSongListView = (ListView) findViewById(R.id.main_list);
 		mSongListView.setOnItemClickListener(new OnItemClickListener() {
@@ -61,7 +63,8 @@ public class MainActivity extends Activity implements OnClickListener {
 					int position, long id) {
 				// TODO Auto-generated method stub
 				Log.i(TAG, mSongInfos.get(position).path);
-				mPlay.openFile(mSongInfos.get(position).path);
+				mIndex = position;
+				PlayMusic(mSongInfos.get(position).path);
 			}
 		});
 		mSongListView.setAdapter(mAdapter);
@@ -72,7 +75,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		// 获取所有歌曲
 		Cursor cursor = cr.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
 				null, null, null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
-		Log.i(TAG, "song nub ="+cursor.getCount());
+		Log.i(TAG, "song nub =" + cursor.getCount());
 		if (cursor.moveToFirst()) {
 			do {
 				String path = cursor.getString(cursor
@@ -89,7 +92,7 @@ public class MainActivity extends Activity implements OnClickListener {
 						.getColumnIndex(MediaStore.Audio.Media.ALBUM));
 				mSongInfos.add(new SongInfo(path, name, singer, album,
 						duration, size));
-				Log.i(TAG, "name:"+name);
+				Log.i(TAG, "name:" + name);
 			} while (cursor.moveToNext());
 		}
 		mAdapter = new SongAdapter(getApplicationContext(), mSongInfos);
@@ -101,25 +104,34 @@ public class MainActivity extends Activity implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.audio_btn_prev:
 			Log.i(TAG, "prev");
+			if (mIndex - 1 >= 0) {
+				mIndex--;
+				PlayMusic(mSongInfos.get(mIndex).path);
+			}
 			break;
 		case R.id.audio_btn_play:
-			
-			Button play = (Button) v;
-			Log.i(TAG, (String) play.getText());
-			if(play.getText().equals("播放"))
-			{
-				mPlay.play();
-				play.setText("停止");
-			}
-			else
-			{
+			if (!mPlaying) {
+				PlayMusic(mSongInfos.get(mIndex).path);
+			} else {
 				mPlay.stop();
-				play.setText("播放");
+				mPlayBtn.setText("播放");
 			}
 			break;
 		case R.id.audio_btn_next:
+			if (mIndex + 1 < mSongInfos.size()) {
+				mIndex++;
+				PlayMusic(mSongInfos.get(mIndex).path);
+			}
 			Log.i(TAG, "next");
 			break;
 		}
+	}
+	private void PlayMusic(String path)
+	{
+		mPlay.stop();
+		mPlay.openFile(path);
+		mPlay.play();
+		mPlaying = true;
+		mPlayBtn.setText("暂停");
 	}
 }

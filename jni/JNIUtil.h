@@ -11,15 +11,20 @@ class JNIUtil
 {
 
 public:
-	static void SetJavaVm(JavaVM*);
+	/* 注意Init和CleanUp必须在主线程中执行*/
+	static void Init(JNIEnv* env);
+	static void CleanUp(JNIEnv* env);
 public:
 	JNIUtil();
 	~JNIUtil();
 	JNIEnv* GetJNIEnv();
-	void Detach();
 	string Jstring2String(jstring jstr);
 	jstring String2Jstring(const char* str);
 private:
+	static jclass m_strClass;
+	static jmethodID m_ctorID;
+	static jmethodID m_getByteID;
+	void Detach();
 	static JavaVM* m_sJVM;
 public:
 	bool m_bAttach;
